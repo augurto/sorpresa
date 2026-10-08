@@ -1,272 +1,938 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sorpresa: Revelación de Género</title>
+    <title>Minijuego Abejitas: Revelación de Género</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
+        :root {
+            --sky: #5c94fc;
+            --ground-top: #00a800;
+            --ground-dirt: #c84c0c;
+        }
+
         body {
             margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #0f0c29;
-            background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
-            transition: background 2s ease-in-out;
-        }
-
-        #container {
-            text-align: center;
-            z-index: 10;
-        }
-
-        #reveal-btn {
-            padding: 20px 50px;
-            font-size: 28px;
-            font-weight: bold;
+            font-family: 'Press Start 2P', cursive;
+            background-color: #222;
             color: white;
-            background: linear-gradient(45deg, #6a11cb, #2575fc);
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            animation: pulse 2s infinite, float 4s ease-in-out infinite;
+            user-select: none;
         }
 
-        #reveal-btn:hover {
-            transform: scale(1.1) translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.7);
-            letter-spacing: 2px;
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(106, 17, 203, 0.7); }
-            70% { box-shadow: 0 0 0 20px rgba(106, 17, 203, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(106, 17, 203, 0); }
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
-        }
-
-        #counter {
-            font-size: 150px;
-            font-weight: 900;
-            color: transparent;
-            -webkit-text-stroke: 2px white;
-            text-shadow: 0 0 20px rgba(255,255,255,0.5);
-            animation: zoomIn 1s ease-in-out infinite alternate;
-            display: none;
-        }
-
-        @keyframes zoomIn {
-            from { transform: scale(0.8); }
-            to { transform: scale(1.2); }
-        }
-
-        #result {
-            display: none;
-            font-size: 10vw;
-            font-weight: 900;
-            color: #fff;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            text-shadow: 0 0 20px #ff69b4, 0 0 40px #ff1493, 0 0 60px #c71585, 0 0 80px #db7093;
-            animation: textGlow 2s ease-in-out infinite alternate, popIn 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        @keyframes textGlow {
-            from { text-shadow: 0 0 20px #ff69b4, 0 0 40px #ff1493; }
-            to { text-shadow: 0 0 30px #ff69b4, 0 0 60px #ff1493, 0 0 90px #c71585, 0 0 120px #fff; }
-        }
-
-        @keyframes popIn {
-            0% { transform: scale(0) rotate(-20deg); opacity: 0; }
-            70% { transform: scale(1.2) rotate(10deg); opacity: 1; }
-            100% { transform: scale(1) rotate(0deg); }
-        }
-
-        /* 3D Balloons */
-        .balloon {
-            position: absolute;
-            bottom: -200px;
-            width: 100px;
-            height: 125px;
-            background: radial-gradient(circle at 35% 35%, #fff 5%, #ffb6c1 20%, #ff1493 80%);
-            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
-            box-shadow: inset -10px -10px 20px rgba(0,0,0,0.3), 0 15px 30px rgba(0,0,0,0.2);
-            animation: floatUp 8s ease-in infinite;
-            z-index: 1;
-        }
-
-        .balloon::before {
-            content: '';
-            position: absolute;
-            bottom: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-left: 12px solid transparent;
-            border-right: 12px solid transparent;
-            border-bottom: 18px solid #ff1493;
-            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2));
-        }
-
-        .balloon::after {
-            content: '';
-            position: absolute;
-            bottom: -80px;
-            left: 50%;
-            width: 2px;
-            height: 80px;
-            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), transparent);
-        }
-
-        @keyframes floatUp {
-            0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            100% { transform: translateY(-130vh) translateX(100px) rotate(30deg); opacity: 0; }
-        }
-        
-        .sparkle {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background-color: white;
-            box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.8);
-            animation: twinkle 1s infinite alternate;
-        }
-        
-        @keyframes twinkle {
-            0% { opacity: 0.2; transform: scale(0.5); }
-            100% { opacity: 1; transform: scale(1.5); }
-        }
-
-        #canvas-container {
+        /* --- UI Screens --- */
+        #ui-layer {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.8);
+            transition: opacity 1s;
+        }
+
+        #selection-screen {
+            background: #ffeb3b;
+            color: #000;
+            padding: 40px;
+            border-radius: 20px;
+            border: 8px solid #ff9800;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            max-width: 800px;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px white;
+            color: #d32f2f;
+            line-height: 1.5;
+        }
+
+        .character-select {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 40px;
+        }
+
+        .char-box {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            border: 4px dashed #333;
+        }
+
+        .char-box h3 {
+            font-size: 16px;
+        }
+
+        .bee-preview {
+            width: 80px;
+            height: 80px;
+            margin: 20px auto;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: relative;
+            text-align: center;
+        }
+
+        .skin-btn {
+            background: #4CAF50;
+            color: white;
+            border: 4px solid #388E3C;
+            padding: 10px 20px;
+            font-family: inherit;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: transform 0.1s;
+        }
+
+        .skin-btn:active {
+            transform: scale(0.95);
+        }
+
+        .start-btn {
+            background: #E91E63;
+            color: white;
+            border: 6px solid #C2185B;
+            padding: 20px 40px;
+            font-family: inherit;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 15px;
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from {
+                transform: scale(1);
+            }
+
+            to {
+                transform: scale(1.05);
+            }
+        }
+
+        /* --- Game World --- */
+        #game-world {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--sky);
+            display: none;
+            overflow: hidden;
+        }
+
+        .ground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 20%;
+            background: var(--ground-dirt);
+            border-top: 20px solid var(--ground-top);
+        }
+
+        .cloud {
+            position: absolute;
+            width: 100px;
+            height: 40px;
+            background: white;
+            border-radius: 50px;
+            opacity: 0.8;
+            top: 10%;
+        }
+
+        /* --- Actors --- */
+        .bee {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            bottom: 25%;
+            transition: left 2s linear, bottom 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            z-index: 10;
+            text-align: center;
+        }
+
+        .bee-crown {
+            position: absolute;
+            top: -24px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 34px;
+            line-height: 1;
             pointer-events: none;
-            z-index: 5;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .papa-items {
+            position: absolute;
+            top: 12px;
+            left: -75px;
+            font-size: 38px;
+            white-space: nowrap;
+            line-height: 1;
+            pointer-events: none;
+        }
+
+        .mama-belly {
+            position: absolute;
+            top: 0px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 60px;
+            filter: drop-shadow(0 0 10px #ff69b4);
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        #papa-bee {
+            left: -100px;
+        }
+
+        #mama-bee {
+            right: 10%;
+            transform: scaleX(-1);
+        }
+
+        .obstacle {
+            position: absolute;
+            width: 60px;
+            height: 80px;
+            bottom: 20%;
+            left: 100%;
+            font-size: 60px;
+            line-height: 80px;
+            text-align: center;
+            transition: left 2s linear;
+        }
+
+        .powerup {
+            filter: drop-shadow(0 0 20px gold);
+            animation: glow 0.5s infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                filter: drop-shadow(0 0 10px gold);
+            }
+
+            to {
+                filter: drop-shadow(0 0 30px gold) brightness(1.5);
+            }
+        }
+
+        /* --- UI In-game --- */
+        #game-ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 20px;
+            color: white;
+            text-shadow: 2px 2px black;
+            z-index: 20;
+        }
+
+        #death-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            z-index: 50;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        #action-text {
+            position: absolute;
+            top: 40%;
+            width: 100%;
+            text-align: center;
+            font-size: 40px;
+            color: white;
+            text-shadow: 4px 4px black;
+            z-index: 60;
+            display: none;
+        }
+
+        /* --- Reveal & Pixel Baby Printer --- */
+        #reveal-screen {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            z-index: 100;
+        }
+
+        .printer-container {
+            background: #ffffff;
+            border: 4px solid #333;
+            border-radius: 16px;
+            padding: 14px 18px 18px 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), 0 0 0 4px #ffb6c1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            animation: cardAppear 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: box-shadow 0.25s ease;
+        }
+
+        @keyframes cardAppear {
+            from {
+                transform: scale(0.6);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .printer-header {
+            font-size: 13px;
+            color: #333;
+            margin-bottom: 12px;
+            background: #fff0f5;
+            padding: 6px 14px;
+            border-radius: 8px;
+            border: 2px dashed #ff69b4;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 0.5px;
+            text-shadow: none;
+            transition: all 0.25s ease;
+        }
+
+        .printer-bay {
+            position: relative;
+            background: #fff8fb;
+            padding: 10px;
+            border-radius: 10px;
+            border: 2px solid #ffccd5;
+            overflow: hidden;
+        }
+
+        .printer-laser {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #ff1493;
+            box-shadow: 0 0 8px #ff1493, 0 0 16px #ff69b4;
+            transition: top 0.1s linear;
+            z-index: 20;
+            display: none;
+            pointer-events: none;
+        }
+
+        .pixel-canvas {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .pixel-row {
+            display: flex;
+            gap: 1px;
+            opacity: 0;
+            transform: scaleY(0.2);
+            transition: opacity 0.12s ease-out, transform 0.12s ease-out;
+            height: 13px;
+        }
+
+        .pixel-row.printed {
+            opacity: 1;
+            transform: scaleY(1);
+        }
+
+        .tetris-cell {
+            width: 13px;
+            height: 13px;
+            box-sizing: border-box;
+        }
+
+        .tetris-block {
+            border: 1px solid rgba(0, 0, 0, 0.22);
+            border-radius: 2px;
+            box-shadow: inset 1.5px 1.5px 0 rgba(255, 255, 255, 0.55), inset -1.5px -1.5px 0 rgba(0, 0, 0, 0.35);
+        }
+
+        .baby-bounce {
+            animation: babyHappy 1.2s infinite ease-in-out alternate;
+        }
+
+        @keyframes babyHappy {
+            0% {
+                transform: scale(1) translateY(0);
+            }
+            100% {
+                transform: scale(1.06) translateY(-5px);
+                filter: drop-shadow(0 6px 12px rgba(255, 105, 180, 0.4));
+            }
+        }
+
+        .girl-text {
+            font-size: clamp(24px, 5.5vw, 44px);
+            color: #ff69b4;
+            text-shadow: 3px 3px #ff1493, 6px 6px #c71585;
+            animation: popIn 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin: 0;
+            text-align: center;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0) rotate(-15deg);
+                opacity: 0;
+            }
+
+            70% {
+                transform: scale(1.15) rotate(6deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        #heart {
+            position: absolute;
+            font-size: 80px;
+            display: none;
+            z-index: 15;
+            animation: floatHeart 2s forwards;
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(0) scale(0);
+                opacity: 0;
+            }
+
+            20% {
+                transform: translateY(-20px) scale(1.2);
+                opacity: 1;
+            }
+
+            80% {
+                transform: translateY(-80px) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100px) scale(0);
+                opacity: 0;
+            }
         }
     </style>
-    <!-- Incluimos la librería canvas-confetti para simulaciones de físicas avanzadas -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
+
 <body>
-    <div id="canvas-container"></div>
-    <div id="container">
-        <button id="reveal-btn">✨ INICIAR REVELACIÓN ✨</button>
-        <div id="counter">3</div>
-        <div id="result">¡ES UNA NIÑA! 🎀</div>
+
+    <div id="ui-layer">
+        <div id="selection-screen">
+            <h1>🐝 ABEJA AVENTURA 🐝<br><span style="font-size: 20px; color: #333;">La Gran Revelación</span></h1>
+            <div class="character-select">
+                <div class="char-box">
+                    <h3>Papá Abeja</h3>
+                    <div id="papa-preview" class="bee-preview" style="font-size:60px; line-height:80px;">🐝</div>
+                </div>
+                <div class="char-box">
+                    <h3>Mamá Abeja</h3>
+                    <div id="mama-preview" class="bee-preview" style="font-size:60px; line-height:80px;">🐝<div class="bee-crown">👑</div></div>
+                </div>
+            </div>
+            <button class="start-btn" onclick="startGame()">▶ ¡COMENZAR LA HISTORIA!</button>
+        </div>
+
+        <div id="reveal-screen">
+            <div id="printer-card" class="printer-container">
+                <div class="printer-header">
+                    <span id="printer-status-icon">🖨️</span>
+                    <span id="printer-status-text">IMPRIMIENDO BEBÉ... [0%]</span>
+                </div>
+                <div id="printer-bay" class="printer-bay">
+                    <div id="printer-laser" class="printer-laser"></div>
+                    <div id="pixel-canvas" class="pixel-canvas"></div>
+                </div>
+            </div>
+            <h1 id="girl-title" class="girl-text" style="display: none; margin-top: 18px;">¡ES UNA NIÑA! 🎀</h1>
+        </div>
+    </div>
+
+    <div id="game-world">
+        <!-- Nubes de fondo -->
+        <div class="cloud" style="left: 10%; top: 15%;"></div>
+        <div class="cloud" style="left: 50%; top: 10%; width: 150px;"></div>
+        <div class="cloud" style="left: 80%; top: 20%;"></div>
+
+        <div class="ground"></div>
+
+        <div id="mama-bee" class="bee" style="font-size:60px; line-height:80px;">🐝<div class="bee-crown">👑</div></div>
+        <div id="papa-bee" class="bee" style="font-size:60px; line-height:80px;">🐝</div>
+
+        <div id="obstacle" class="obstacle"></div>
+        <div id="heart">💖</div>
+
+        <div id="game-ui">Vidas: ❤️❤️❤️</div>
+        <div id="death-overlay"></div>
+        <div id="action-text"></div>
     </div>
 
     <script>
-        const btn = document.getElementById('reveal-btn');
-        const counter = document.getElementById('counter');
-        const result = document.getElementById('result');
-        const body = document.body;
+        
 
-        btn.addEventListener('click', () => {
-            // Fase de suspenso (cuenta regresiva)
-            btn.style.display = 'none';
-            counter.style.display = 'block';
-            
-            let count = 3;
-            
-            // Audio de latidos del corazón o suspenso (opcional simulado)
-            
-            const interval = setInterval(() => {
-                count--;
-                if (count > 0) {
-                    counter.textContent = count;
-                } else {
-                    clearInterval(interval);
-                    counter.style.display = 'none';
-                    triggerReveal();
-                }
-            }, 1000);
-        });
+        // --- Game Logic ---
+        const uiLayer = document.getElementById('ui-layer');
+        const selectionScreen = document.getElementById('selection-screen');
+        const gameWorld = document.getElementById('game-world');
+        const papa = document.getElementById('papa-bee');
+        const mama = document.getElementById('mama-bee');
+        const obstacle = document.getElementById('obstacle');
+        const uiVidas = document.getElementById('game-ui');
+        const deathOverlay = document.getElementById('death-overlay');
+        const actionText = document.getElementById('action-text');
+        const heart = document.getElementById('heart');
 
-        function triggerReveal() {
-            // Mostrar resultado con animación popIn
-            result.style.display = 'block';
-            
-            // Cambiar fondo gradualmente a tonos rosas
-            body.style.background = 'radial-gradient(circle at center, #fff0f5, #ffb6c1, #ff69b4, #ff1493)';
+        let vidas = 3;
 
-            // Crear globos 3D
-            for (let i = 0; i < 30; i++) {
-                setTimeout(() => {
-                    const balloon = document.createElement('div');
-                    balloon.className = 'balloon';
-                    balloon.style.left = Math.random() * 90 + 5 + '%';
-                    const size = Math.random() * 0.5 + 0.8;
-                    balloon.style.transform = `scale(${size})`;
-                    balloon.style.animationDuration = (Math.random() * 5 + 7) + 's';
-                    balloon.style.animationDelay = (Math.random() * 2) + 's';
-                    body.appendChild(balloon);
-                }, i * 150);
-            }
-            
-            // Crear destellos
-            for (let i = 0; i < 50; i++) {
-                const sparkle = document.createElement('div');
-                sparkle.className = 'sparkle';
-                sparkle.style.left = Math.random() * 100 + '%';
-                sparkle.style.top = Math.random() * 100 + '%';
-                sparkle.style.animationDelay = Math.random() * 2 + 's';
-                body.appendChild(sparkle);
-            }
+        function startGame() {
+            // Asignar los personajes fijos
+            papa.innerHTML = '🐝';
+            mama.innerHTML = '🐝<div class="bee-crown">👑</div>';
 
-            // Simulación de Confeti (Fuegos artificiales realistas)
-            const duration = 15 * 1000;
-            const animationEnd = Date.now() + duration;
-            const defaults = { startVelocity: 40, spread: 360, ticks: 100, zIndex: 5 };
+            // Ocultar UI e iniciar mundo
+            uiLayer.style.background = 'transparent';
+            selectionScreen.style.display = 'none';
+            gameWorld.style.display = 'block';
 
-            function randomInRange(min, max) {
-                return Math.random() * (max - min) + min;
-            }
+            setTimeout(() => { uiLayer.style.display = 'none'; }, 1000);
 
-            const interval = setInterval(function() {
-                const timeLeft = animationEnd - Date.now();
+            // Iniciar Acto 1
+            setTimeout(act1, 1000);
+        }
 
-                if (timeLeft <= 0) {
-                    return clearInterval(interval);
-                }
+        function act1() {
+            // Papá avanza, aparece cigarro
+            papa.style.left = '30%';
+            obstacle.innerText = '🚬';
+            obstacle.style.left = '35%';
 
-                const particleCount = 70 * (timeLeft / duration);
-                
-                // Colores para niña
-                const colors = ['#ff69b4', '#ff1493', '#ffb6c1', '#ffffff', '#db7093'];
-
-                confetti(Object.assign({}, defaults, {
-                    particleCount,
-                    colors: colors,
-                    origin: { x: randomInRange(0.1, 0.9), y: Math.random() - 0.2 }
-                }));
-            }, 250);
-            
-            // Explosión inicial masiva
             setTimeout(() => {
-                 confetti({
-                    particleCount: 300,
-                    spread: 180,
-                    origin: { y: 0.6 },
-                    colors: ['#ffc0cb', '#ff69b4', '#ff1493', '#fff'],
-                    startVelocity: 60
-                });
+                // Colisión!
+                papa.style.bottom = '-100px'; // cae
+                showDeath('¡Demasiado humo!');
+            }, 2000);
+        }
+
+        function act2() {
+            // Papá avanza, aparece cerveza
+            papa.style.transition = 'none';
+            papa.style.left = '-100px';
+            papa.style.bottom = '25%';
+            obstacle.style.transition = 'none';
+            obstacle.style.left = '100%';
+
+            setTimeout(() => {
+                papa.style.transition = 'left 1.5s linear, bottom 0.5s';
+                obstacle.style.transition = 'left 1.5s linear';
+
+                papa.style.left = '50%';
+                obstacle.innerText = '🍺';
+                obstacle.style.left = '55%';
+
+                setTimeout(() => {
+                    papa.style.bottom = '-100px';
+                    showDeath('¡Se pasó de copas!');
+                }, 1500);
             }, 100);
+        }
+
+        function act3() {
+            // Intento final con persecución
+            papa.style.transition = 'none';
+            papa.style.left = '-100px';
+            papa.style.bottom = '25%';
+            obstacle.style.display = 'none';
+
+            // Restaurar a Mamá si se movió
+            mama.style.transition = 'none';
+            mama.style.right = '10%';
+
+            setTimeout(() => {
+                papa.style.transition = 'left 4s linear'; // Más lento
+                papa.classList.add('powerup'); // Brilla, preparándose para alcanzarla
+                
+                // Papá toma su cigarro y chela "desde antes", al lado izquierdo
+                papa.innerHTML = '🐝<div class="papa-items">🚬🍺</div>';
+
+                // Va hasta donde está mamá para chocarla
+                papa.style.left = 'calc(90% - 120px)'; 
+
+                // Esperamos a que llegue a ella (4s)
+                setTimeout(() => {
+                    // Tras el choque, Mamá huye hacia el borde
+                    mama.style.transition = 'right 2s linear'; // Más lenta
+                    mama.style.right = '2%'; 
+                    
+                    // Papá reacciona y la persigue al borde
+                    setTimeout(() => {
+                        papa.style.transition = 'left 1.5s linear'; // Más lenta
+                        papa.style.left = 'calc(98% - 120px)'; // La alcanza en el borde
+                        
+                        setTimeout(() => {
+                            loveScene();
+                        }, 1800);
+                    }, 600);
+                }, 4000);
+
+            }, 100);
+        }
+
+        function showDeath(msg) {
+            vidas--;
+            actualizarVidas();
+
+            setTimeout(() => {
+                uiLayer.style.display = 'flex';
+                deathOverlay.style.display = 'block';
+                deathOverlay.style.opacity = '1';
+                actionText.innerText = msg;
+                actionText.style.display = 'block';
+
+                setTimeout(() => {
+                    deathOverlay.style.opacity = '0';
+                    actionText.style.display = 'none';
+                    uiLayer.style.display = 'none';
+                    setTimeout(() => deathOverlay.style.display = 'none', 500);
+
+                    if (vidas === 2) act2();
+                    else if (vidas === 1) act3();
+                }, 2000);
+            }, 500);
+        }
+
+        function actualizarVidas() {
+            uiVidas.innerText = 'Vidas: ' + '❤️'.repeat(vidas);
+        }
+
+        function loveScene() {
+            // Regresan juntos al centro suavemente (más lento)
+            papa.style.transition = 'left 2.5s ease-in-out';
+            mama.style.transition = 'right 2.5s ease-in-out';
+            papa.style.left = '40%';
+            mama.style.right = '40%';
+            
+            // Ya no está enojado/brillando
+            papa.classList.remove('powerup');
+
+            // Esperar a que lleguen al centro para que aparezca el corazón
+            setTimeout(() => {
+                // Aparece el corazón en medio
+                heart.style.left = '45%';
+                heart.style.top = '40%';
+                heart.style.display = 'block';
+
+                // Embarazo (Pancita grande)
+                setTimeout(() => {
+                    mama.classList.add('powerup'); // Brilla intenso
+                    
+                    // Animación de crecer la pancita
+                    mama.style.transition = 'transform 3s';
+                    mama.style.transform = 'scaleX(-1) scale(1.5)';
+                    
+                    // Símbolo de embarazada directamente encima de la abeja junto con su coronita
+                    mama.innerHTML = '🐝<div class="bee-crown">👑</div><div class="mama-belly">🤰</div>';
+
+                    // Vibración (también más lenta)
+                    let vib = 0;
+                    const vibInt = setInterval(() => {
+                        mama.style.transform = `translateX(${vib % 2 === 0 ? 5 : -5}px) scaleX(-1) scale(1.5)`;
+                        vib++;
+                    }, 80);
+
+                    setTimeout(() => {
+                        clearInterval(vibInt);
+                        triggerFinalReveal();
+                    }, 4000);
+                }, 1500);
+            }, 2500); // Tardan 2.5s en llegar al centro
+        }
+
+        const BABY_PIXEL_ART = [
+            "...BBB....BBB...", // Moño lazos
+            "..BBBBB..BBBBB..", // Moño orejitas
+            "...BBBBBBBBBB...", // Moño nudo central
+            "..KKKBBBBBBKKK..", // Corona de la cabeza
+            ".KHHHHHHHHHHHHK.", // Cabello castaño tierno
+            ".KHSSSSSSSSSSHK.", // Frente y flequillo
+            ".KSSSSSSSSSSSSK.", // Carita
+            ".KSSWEESSEEWSSK.", // Ojitos grandes con brillo blanco (W) y pupila (E)
+            ".KCCEESSSSEECCK.", // Mejillas sonrojadas (C) y base de ojos
+            ".KSCSSPPPPSSCSK.", // Chupón arriba (P)
+            "..KSSPPPPPPSSK..", // Anillo del chupón
+            "...KSSSSSSSSK...", // Barbilla / cuello
+            "..KDDDDDDDDDDK..", // Hombros mameluco (D)
+            ".KDDDDPPPPDDDDK.", // Corazón en el pecho (P)
+            ".KDDDDDDDDDDDDK.", // Cuerpito mameluco (D)
+            "..KDDDDDDDDDDK.."  // Base y piecitos (D)
+        ];
+
+        // Paleta base neutral
+        const BASE_PALETTE = {
+            '.': 'transparent',
+            'K': '#2b1b17', // contorno oscuro / marrón
+            'H': '#8d5524', // pelito
+            'S': '#fcd5b4', // piel suave de bebé
+            'W': '#ffffff', // brillo de ojitos
+            'E': '#1e1b18', // pupila tierna
+            'C': '#ff8da1'  // mejillas sonrojadas
+        };
+
+        // Paletas dinámicas que alternan entre Azul y Rosado para el suspenso
+        const GENDER_PALETTE = {
+            blue: {
+                'B': '#0288d1', // gorrito / moño celeste
+                'D': '#81d4fa', // mameluco celeste pastel
+                'P': '#00b0ff'  // chupón / corazón azul eléctrico
+            },
+            pink: {
+                'B': '#ff1493', // moño fucsia / rosa mexicano
+                'D': '#ffb6c1', // mameluco rosa pastel
+                'P': '#ff2a7a'  // chupón / corazón magenta
+            }
+        };
+
+        function setGenderTheme(theme) {
+            const isBlue = (theme === 'blue');
+            const laser = document.getElementById('printer-laser');
+            const printerCard = document.getElementById('printer-card');
+            const printerHeader = document.querySelector('.printer-header');
+
+            if (laser) {
+                laser.style.background = isBlue ? '#00bfff' : '#ff1493';
+                laser.style.boxShadow = isBlue ? '0 0 10px #00bfff, 0 0 20px #03a9f4' : '0 0 10px #ff1493, 0 0 20px #ff69b4';
+            }
+            if (printerCard) {
+                printerCard.style.boxShadow = isBlue 
+                    ? '0 10px 30px rgba(0,0,0,0.25), 0 0 0 5px #81d4fa, 0 0 30px rgba(3, 169, 244, 0.45)' 
+                    : '0 10px 30px rgba(0,0,0,0.25), 0 0 0 5px #ffb6c1, 0 0 30px rgba(255, 105, 180, 0.45)';
+            }
+            if (printerHeader) {
+                printerHeader.style.borderColor = isBlue ? '#03a9f4' : '#ff69b4';
+                printerHeader.style.backgroundColor = isBlue ? '#e1f5fe' : '#fff0f5';
+                printerHeader.style.color = isBlue ? '#0277bd' : '#c2185b';
+            }
+
+            // Cambiar suavemente el color de todas las piezas de ropa y moño
+            document.querySelectorAll('.gender-cell').forEach(cell => {
+                const char = cell.dataset.char;
+                if (char && GENDER_PALETTE[theme][char]) {
+                    cell.style.backgroundColor = GENDER_PALETTE[theme][char];
+                }
+            });
+        }
+
+        function playPrinterBip(isBlue) {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const ctx = new AudioCtx();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'square';
+                const baseFreq = isBlue ? 260 : 380;
+                osc.frequency.setValueAtTime(baseFreq + Math.random() * 40, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.08);
+                gain.gain.setValueAtTime(0.04, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.08);
+            } catch (e) {}
+        }
+
+        function playSuccessJingle() {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const ctx = new AudioCtx();
+                const notes = [261.63, 329.63, 392.00, 523.25]; // C4, E4, G4, C5
+                notes.forEach((freq, i) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'triangle';
+                    const startTime = ctx.currentTime + i * 0.12;
+                    osc.frequency.setValueAtTime(freq, startTime);
+                    gain.gain.setValueAtTime(0.08, startTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.25);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(startTime);
+                    osc.stop(startTime + 0.25);
+                });
+            } catch (e) {}
+        }
+
+        function startBabyPrint(onComplete) {
+            const canvas = document.getElementById('pixel-canvas');
+            const laser = document.getElementById('printer-laser');
+            const statusText = document.getElementById('printer-status-text');
+            const statusIcon = document.getElementById('printer-status-icon');
+            
+            canvas.innerHTML = '';
+            canvas.classList.remove('baby-bounce');
+            laser.style.display = 'block';
+            laser.style.top = '10px';
+            setGenderTheme('blue');
+            statusIcon.innerText = '🖨️';
+            statusText.innerText = 'IMPRIMIENDO... ¿AZUL O ROSA? [0%]';
+
+            // Crear las filas y celdas
+            const rowsElements = [];
+            BABY_PIXEL_ART.forEach((rowStr) => {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'pixel-row';
+                
+                for (let i = 0; i < rowStr.length; i++) {
+                    const char = rowStr[i];
+                    const cell = document.createElement('div');
+                    cell.className = 'tetris-cell';
+                    if (char !== '.') {
+                        cell.classList.add('tetris-block');
+                        if (char === 'B' || char === 'D' || char === 'P') {
+                            cell.classList.add('gender-cell');
+                            cell.dataset.char = char;
+                            cell.style.backgroundColor = GENDER_PALETTE.blue[char];
+                            cell.style.transition = 'background-color 0.25s ease';
+                        } else {
+                            cell.style.backgroundColor = BASE_PALETTE[char] || '#ccc';
+                        }
+                    }
+                    rowDiv.appendChild(cell);
+                }
+                canvas.appendChild(rowDiv);
+                rowsElements.push(rowDiv);
+            });
+
+            // Imprimir línea por línea más lento para crear gran expectativa (340ms por línea)
+            let currentRow = 0;
+            const totalRows = rowsElements.length;
+            const printInterval = setInterval(() => {
+                if (currentRow < totalRows) {
+                    // Revelar la fila actual
+                    rowsElements[currentRow].classList.add('printed');
+                    
+                    // Alternar tema entre azul y rosado mientras imprime
+                    const isBlue = (currentRow % 2 === 0);
+                    setGenderTheme(isBlue ? 'blue' : 'pink');
+                    
+                    // Mover el cabezal / láser de la impresora
+                    laser.style.top = (10 + (currentRow + 1) * 14) + 'px';
+                    
+                    // Sonido y progreso con indicador cambiante
+                    playPrinterBip(isBlue);
+                    const percent = Math.round(((currentRow + 1) / totalRows) * 100);
+                    statusIcon.innerText = isBlue ? '💙' : '💖';
+                    statusText.innerText = isBlue 
+                        ? `¿SERÁ NIÑO? 👦 [${percent}%]` 
+                        : `¿SERÁ NIÑA? 👧 [${percent}%]`;
+                    
+                    currentRow++;
+                } else {
+                    clearInterval(printInterval);
+                    laser.style.display = 'none';
+
+                    // AL FINALIZAR: queda definitivamente ROSADO al mismo tiempo que sale el texto
+                    setGenderTheme('pink');
+                    statusIcon.innerText = '🎀';
+                    statusText.innerText = '💖 ¡GÉNERO CONFIRMADO: NIÑA! 🎀';
+                    canvas.classList.add('baby-bounce');
+                    playSuccessJingle();
+
+                    // Disparar inmediatamente al mismo tiempo
+                    if (onComplete) onComplete();
+                }
+            }, 340);
+        }
+
+        function triggerFinalReveal() {
+            // Flash blanco
+            uiLayer.style.display = 'flex';
+            uiLayer.style.background = 'white';
+
+            setTimeout(() => {
+                // Mostrar pantalla de revelación con la impresora
+                uiLayer.style.background = 'rgba(255,255,255,0.95)';
+                document.getElementById('reveal-screen').style.display = 'flex';
+                document.getElementById('girl-title').style.display = 'none';
+
+                // Iniciar la impresión del bebé línea por línea
+                startBabyPrint(() => {
+                    // Al terminar la impresión: revelar el título y confeti
+                    const girlTitle = document.getElementById('girl-title');
+                    girlTitle.style.display = 'block';
+
+                    // Lluvia de confeti rosa
+                    const duration = 15 * 1000;
+                    const animationEnd = Date.now() + duration;
+                    const defaults = { startVelocity: 40, spread: 360, ticks: 100, zIndex: 1000 };
+
+                    const interval = setInterval(function () {
+                        const timeLeft = animationEnd - Date.now();
+                        if (timeLeft <= 0) return clearInterval(interval);
+
+                        const particleCount = 70 * (timeLeft / duration);
+                        const colors = ['#ff69b4', '#ff1493', '#ffb6c1', '#ffffff', '#db7093'];
+
+                        confetti(Object.assign({}, defaults, {
+                            particleCount,
+                            colors: colors,
+                            origin: { x: Math.random(), y: Math.random() - 0.2 }
+                        }));
+                    }, 250);
+
+                    // Explosión principal
+                    confetti({
+                        particleCount: 400,
+                        spread: 180,
+                        origin: { y: 0.6 },
+                        colors: ['#ffc0cb', '#ff69b4', '#ff1493', '#fff'],
+                        startVelocity: 60,
+                        zIndex: 1000
+                    });
+                });
+
+            }, 500);
         }
     </script>
 </body>
+
 </html>
