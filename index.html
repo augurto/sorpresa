@@ -178,7 +178,7 @@
             font-size: 34px;
             line-height: 1;
             pointer-events: none;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
         }
 
         .papa-items {
@@ -289,16 +289,17 @@
 
         .printer-container {
             background: #ffffff;
-            border: 4px solid #333;
-            border-radius: 16px;
-            padding: 14px 18px 18px 18px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), 0 0 0 4px #ffb6c1;
+            border: 5px solid #333;
+            border-radius: 20px;
+            padding: 20px 24px 24px 24px;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.3), 0 0 0 5px #ffb6c1;
             display: flex;
             flex-direction: column;
             align-items: center;
             position: relative;
             animation: cardAppear 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             transition: box-shadow 0.25s ease;
+            max-width: 95vw;
         }
 
         @keyframes cardAppear {
@@ -306,6 +307,7 @@
                 transform: scale(0.6);
                 opacity: 0;
             }
+
             to {
                 transform: scale(1);
                 opacity: 1;
@@ -313,16 +315,17 @@
         }
 
         .printer-header {
-            font-size: 13px;
+            font-size: 16px;
+            font-weight: bold;
             color: #333;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             background: #fff0f5;
-            padding: 6px 14px;
-            border-radius: 8px;
+            padding: 10px 20px;
+            border-radius: 10px;
             border: 2px dashed #ff69b4;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             letter-spacing: 0.5px;
             text-shadow: none;
             transition: all 0.25s ease;
@@ -331,9 +334,9 @@
         .printer-bay {
             position: relative;
             background: #fff8fb;
-            padding: 10px;
-            border-radius: 10px;
-            border: 2px solid #ffccd5;
+            padding: 14px;
+            border-radius: 14px;
+            border: 3px solid #ffccd5;
             overflow: hidden;
         }
 
@@ -341,10 +344,10 @@
             position: absolute;
             left: 0;
             width: 100%;
-            height: 3px;
+            height: 4px;
             background: #ff1493;
-            box-shadow: 0 0 8px #ff1493, 0 0 16px #ff69b4;
-            transition: top 0.1s linear;
+            box-shadow: 0 0 10px #ff1493, 0 0 20px #ff69b4;
+            transition: top 0.15s linear;
             z-index: 20;
             display: none;
             pointer-events: none;
@@ -361,8 +364,8 @@
             gap: 1px;
             opacity: 0;
             transform: scaleY(0.2);
-            transition: opacity 0.12s ease-out, transform 0.12s ease-out;
-            height: 13px;
+            transition: opacity 0.15s ease-out, transform 0.15s ease-out;
+            height: 22px;
         }
 
         .pixel-row.printed {
@@ -371,15 +374,15 @@
         }
 
         .tetris-cell {
-            width: 13px;
-            height: 13px;
+            width: 22px;
+            height: 22px;
             box-sizing: border-box;
         }
 
         .tetris-block {
-            border: 1px solid rgba(0, 0, 0, 0.22);
-            border-radius: 2px;
-            box-shadow: inset 1.5px 1.5px 0 rgba(255, 255, 255, 0.55), inset -1.5px -1.5px 0 rgba(0, 0, 0, 0.35);
+            border: 1.5px solid rgba(0, 0, 0, 0.25);
+            border-radius: 3px;
+            box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.6), inset -2px -2px 0 rgba(0, 0, 0, 0.35);
         }
 
         .baby-bounce {
@@ -390,6 +393,7 @@
             0% {
                 transform: scale(1) translateY(0);
             }
+
             100% {
                 transform: scale(1.06) translateY(-5px);
                 filter: drop-shadow(0 6px 12px rgba(255, 105, 180, 0.4));
@@ -460,12 +464,14 @@
             <h1>🐝 ABEJA AVENTURA 🐝<br><span style="font-size: 20px; color: #333;">La Gran Revelación</span></h1>
             <div class="character-select">
                 <div class="char-box">
-                    <h3>Papá Abeja</h3>
+                    <h3>César Abeja</h3>
                     <div id="papa-preview" class="bee-preview" style="font-size:60px; line-height:80px;">🐝</div>
                 </div>
                 <div class="char-box">
-                    <h3>Mamá Abeja</h3>
-                    <div id="mama-preview" class="bee-preview" style="font-size:60px; line-height:80px;">🐝<div class="bee-crown">👑</div></div>
+                    <h3>Diana Abeja</h3>
+                    <div id="mama-preview" class="bee-preview" style="font-size:60px; line-height:80px;">🐝<div
+                            class="bee-crown">👑</div>
+                    </div>
                 </div>
             </div>
             <button class="start-btn" onclick="startGame()">▶ ¡COMENZAR LA HISTORIA!</button>
@@ -494,7 +500,8 @@
 
         <div class="ground"></div>
 
-        <div id="mama-bee" class="bee" style="font-size:60px; line-height:80px;">🐝<div class="bee-crown">👑</div></div>
+        <div id="mama-bee" class="bee" style="font-size:60px; line-height:80px;">🐝<div class="bee-crown">👑</div>
+        </div>
         <div id="papa-bee" class="bee" style="font-size:60px; line-height:80px;">🐝</div>
 
         <div id="obstacle" class="obstacle"></div>
@@ -506,7 +513,7 @@
     </div>
 
     <script>
-        
+
 
         // --- Game Logic ---
         const uiLayer = document.getElementById('ui-layer');
@@ -569,7 +576,7 @@
 
                 setTimeout(() => {
                     papa.style.bottom = '-100px';
-                    showDeath('¡Se pasó de copas!');
+                    showDeath('¡Se pasó de Chelas!');
                 }, 1500);
             }, 100);
         }
@@ -588,24 +595,24 @@
             setTimeout(() => {
                 papa.style.transition = 'left 4s linear'; // Más lento
                 papa.classList.add('powerup'); // Brilla, preparándose para alcanzarla
-                
+
                 // Papá toma su cigarro y chela "desde antes", al lado izquierdo
                 papa.innerHTML = '🐝<div class="papa-items">🚬🍺</div>';
 
                 // Va hasta donde está mamá para chocarla
-                papa.style.left = 'calc(90% - 120px)'; 
+                papa.style.left = 'calc(90% - 120px)';
 
                 // Esperamos a que llegue a ella (4s)
                 setTimeout(() => {
                     // Tras el choque, Mamá huye hacia el borde
                     mama.style.transition = 'right 2s linear'; // Más lenta
-                    mama.style.right = '2%'; 
-                    
+                    mama.style.right = '2%';
+
                     // Papá reacciona y la persigue al borde
                     setTimeout(() => {
                         papa.style.transition = 'left 1.5s linear'; // Más lenta
                         papa.style.left = 'calc(98% - 120px)'; // La alcanza en el borde
-                        
+
                         setTimeout(() => {
                             loveScene();
                         }, 1800);
@@ -648,7 +655,7 @@
             mama.style.transition = 'right 2.5s ease-in-out';
             papa.style.left = '40%';
             mama.style.right = '40%';
-            
+
             // Ya no está enojado/brillando
             papa.classList.remove('powerup');
 
@@ -662,11 +669,11 @@
                 // Embarazo (Pancita grande)
                 setTimeout(() => {
                     mama.classList.add('powerup'); // Brilla intenso
-                    
+
                     // Animación de crecer la pancita
                     mama.style.transition = 'transform 3s';
                     mama.style.transform = 'scaleX(-1) scale(1.5)';
-                    
+
                     // Símbolo de embarazada directamente encima de la abeja junto con su coronita
                     mama.innerHTML = '🐝<div class="bee-crown">👑</div><div class="mama-belly">🤰</div>';
 
@@ -740,8 +747,8 @@
                 laser.style.boxShadow = isBlue ? '0 0 10px #00bfff, 0 0 20px #03a9f4' : '0 0 10px #ff1493, 0 0 20px #ff69b4';
             }
             if (printerCard) {
-                printerCard.style.boxShadow = isBlue 
-                    ? '0 10px 30px rgba(0,0,0,0.25), 0 0 0 5px #81d4fa, 0 0 30px rgba(3, 169, 244, 0.45)' 
+                printerCard.style.boxShadow = isBlue
+                    ? '0 10px 30px rgba(0,0,0,0.25), 0 0 0 5px #81d4fa, 0 0 30px rgba(3, 169, 244, 0.45)'
                     : '0 10px 30px rgba(0,0,0,0.25), 0 0 0 5px #ffb6c1, 0 0 30px rgba(255, 105, 180, 0.45)';
             }
             if (printerHeader) {
@@ -776,7 +783,7 @@
                 gain.connect(ctx.destination);
                 osc.start();
                 osc.stop(ctx.currentTime + 0.08);
-            } catch (e) {}
+            } catch (e) { }
         }
 
         function playSuccessJingle() {
@@ -798,7 +805,7 @@
                     osc.start(startTime);
                     osc.stop(startTime + 0.25);
                 });
-            } catch (e) {}
+            } catch (e) { }
         }
 
         function startBabyPrint(onComplete) {
@@ -806,7 +813,7 @@
             const laser = document.getElementById('printer-laser');
             const statusText = document.getElementById('printer-status-text');
             const statusIcon = document.getElementById('printer-status-icon');
-            
+
             canvas.innerHTML = '';
             canvas.classList.remove('baby-bounce');
             laser.style.display = 'block';
@@ -820,7 +827,7 @@
             BABY_PIXEL_ART.forEach((rowStr) => {
                 const rowDiv = document.createElement('div');
                 rowDiv.className = 'pixel-row';
-                
+
                 for (let i = 0; i < rowStr.length; i++) {
                     const char = rowStr[i];
                     const cell = document.createElement('div');
@@ -849,22 +856,22 @@
                 if (currentRow < totalRows) {
                     // Revelar la fila actual
                     rowsElements[currentRow].classList.add('printed');
-                    
+
                     // Alternar tema entre azul y rosado mientras imprime
                     const isBlue = (currentRow % 2 === 0);
                     setGenderTheme(isBlue ? 'blue' : 'pink');
-                    
+
                     // Mover el cabezal / láser de la impresora
                     laser.style.top = (10 + (currentRow + 1) * 14) + 'px';
-                    
+
                     // Sonido y progreso con indicador cambiante
                     playPrinterBip(isBlue);
                     const percent = Math.round(((currentRow + 1) / totalRows) * 100);
                     statusIcon.innerText = isBlue ? '💙' : '💖';
-                    statusText.innerText = isBlue 
-                        ? `¿SERÁ NIÑO? 👦 [${percent}%]` 
+                    statusText.innerText = isBlue
+                        ? `¿SERÁ NIÑO? 👦 [${percent}%]`
                         : `¿SERÁ NIÑA? 👧 [${percent}%]`;
-                    
+
                     currentRow++;
                 } else {
                     clearInterval(printInterval);
