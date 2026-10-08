@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorpresa: Revelación de Género</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #0f0c29;
+            background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            transition: background 2s ease-in-out;
+        }
+
+        #container {
+            text-align: center;
+            z-index: 10;
+        }
+
+        #reveal-btn {
+            padding: 20px 50px;
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: pulse 2s infinite, float 4s ease-in-out infinite;
+        }
+
+        #reveal-btn:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+            letter-spacing: 2px;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(106, 17, 203, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(106, 17, 203, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(106, 17, 203, 0); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        #counter {
+            font-size: 150px;
+            font-weight: 900;
+            color: transparent;
+            -webkit-text-stroke: 2px white;
+            text-shadow: 0 0 20px rgba(255,255,255,0.5);
+            animation: zoomIn 1s ease-in-out infinite alternate;
+            display: none;
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.8); }
+            to { transform: scale(1.2); }
+        }
+
+        #result {
+            display: none;
+            font-size: 10vw;
+            font-weight: 900;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            text-shadow: 0 0 20px #ff69b4, 0 0 40px #ff1493, 0 0 60px #c71585, 0 0 80px #db7093;
+            animation: textGlow 2s ease-in-out infinite alternate, popIn 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes textGlow {
+            from { text-shadow: 0 0 20px #ff69b4, 0 0 40px #ff1493; }
+            to { text-shadow: 0 0 30px #ff69b4, 0 0 60px #ff1493, 0 0 90px #c71585, 0 0 120px #fff; }
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0) rotate(-20deg); opacity: 0; }
+            70% { transform: scale(1.2) rotate(10deg); opacity: 1; }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        /* 3D Balloons */
+        .balloon {
+            position: absolute;
+            bottom: -200px;
+            width: 100px;
+            height: 125px;
+            background: radial-gradient(circle at 35% 35%, #fff 5%, #ffb6c1 20%, #ff1493 80%);
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            box-shadow: inset -10px -10px 20px rgba(0,0,0,0.3), 0 15px 30px rgba(0,0,0,0.2);
+            animation: floatUp 8s ease-in infinite;
+            z-index: 1;
+        }
+
+        .balloon::before {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-bottom: 18px solid #ff1493;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2));
+        }
+
+        .balloon::after {
+            content: '';
+            position: absolute;
+            bottom: -80px;
+            left: 50%;
+            width: 2px;
+            height: 80px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), transparent);
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translateY(-130vh) translateX(100px) rotate(30deg); opacity: 0; }
+        }
+        
+        .sparkle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: white;
+            box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.8);
+            animation: twinkle 1s infinite alternate;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.2; transform: scale(0.5); }
+            100% { opacity: 1; transform: scale(1.5); }
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+    </style>
+    <!-- Incluimos la librería canvas-confetti para simulaciones de físicas avanzadas -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    <div id="container">
+        <button id="reveal-btn">✨ INICIAR REVELACIÓN ✨</button>
+        <div id="counter">3</div>
+        <div id="result">¡ES UNA NIÑA! 🎀</div>
+    </div>
+
+    <script>
+        const btn = document.getElementById('reveal-btn');
+        const counter = document.getElementById('counter');
+        const result = document.getElementById('result');
+        const body = document.body;
+
+        btn.addEventListener('click', () => {
+            // Fase de suspenso (cuenta regresiva)
+            btn.style.display = 'none';
+            counter.style.display = 'block';
+            
+            let count = 3;
+            
+            // Audio de latidos del corazón o suspenso (opcional simulado)
+            
+            const interval = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    counter.textContent = count;
+                } else {
+                    clearInterval(interval);
+                    counter.style.display = 'none';
+                    triggerReveal();
+                }
+            }, 1000);
+        });
+
+        function triggerReveal() {
+            // Mostrar resultado con animación popIn
+            result.style.display = 'block';
+            
+            // Cambiar fondo gradualmente a tonos rosas
+            body.style.background = 'radial-gradient(circle at center, #fff0f5, #ffb6c1, #ff69b4, #ff1493)';
+
+            // Crear globos 3D
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const balloon = document.createElement('div');
+                    balloon.className = 'balloon';
+                    balloon.style.left = Math.random() * 90 + 5 + '%';
+                    const size = Math.random() * 0.5 + 0.8;
+                    balloon.style.transform = `scale(${size})`;
+                    balloon.style.animationDuration = (Math.random() * 5 + 7) + 's';
+                    balloon.style.animationDelay = (Math.random() * 2) + 's';
+                    body.appendChild(balloon);
+                }, i * 150);
+            }
+            
+            // Crear destellos
+            for (let i = 0; i < 50; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.top = Math.random() * 100 + '%';
+                sparkle.style.animationDelay = Math.random() * 2 + 's';
+                body.appendChild(sparkle);
+            }
+
+            // Simulación de Confeti (Fuegos artificiales realistas)
+            const duration = 15 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 40, spread: 360, ticks: 100, zIndex: 5 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            const interval = setInterval(function() {
+                const timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                const particleCount = 70 * (timeLeft / duration);
+                
+                // Colores para niña
+                const colors = ['#ff69b4', '#ff1493', '#ffb6c1', '#ffffff', '#db7093'];
+
+                confetti(Object.assign({}, defaults, {
+                    particleCount,
+                    colors: colors,
+                    origin: { x: randomInRange(0.1, 0.9), y: Math.random() - 0.2 }
+                }));
+            }, 250);
+            
+            // Explosión inicial masiva
+            setTimeout(() => {
+                 confetti({
+                    particleCount: 300,
+                    spread: 180,
+                    origin: { y: 0.6 },
+                    colors: ['#ffc0cb', '#ff69b4', '#ff1493', '#fff'],
+                    startVelocity: 60
+                });
+            }, 100);
+        }
+    </script>
+</body>
+</html>
